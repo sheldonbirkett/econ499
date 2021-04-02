@@ -72,40 +72,65 @@ import delimited "C:\Users\sheld\Documents\Thesis_Data_Full_United_States\merged
 
 ****GENERATE DUMMY VARIABLES FOR MIN DISTANCE TO WILDFIRE VARIABLES - This is the cuttoff for treatment/control. I will be usings 4 km cuttoff ~ In literature 3.22km (3220m) (as specified by Loomis 2004)****
 
-****Generate Dummt for Each Year***
+****Generate Dummy Variables for Each Year and Time Frame***
+***For Example, if dummy treated_2005 is 1 if within 4km from wildfire and the block group is in the 2005-2009 period***
+
+***Note: I made dummy variables non overlapping below for regression, in the cross tabs tables for summary stats take off (year == "xxxx-xxxxx") for overlapping tabulations****
+
+***WITHIN 4KM FOR EACH YEAR***
+
 forval i=5(1)9{
     generate treated_200`i'_sim = 0
-	replace treated_200`i'_sim = 1 if min_dist_200`i'_sim <= 4000
+	replace treated_200`i'_sim = 1 if (min_dist_200`i'_sim <= 4000) & (year == "2005-2009")
 }
 
-forval i=10(1)18{
+forval i=10(1)14{
     generate treated_20`i'_sim = 0
-	replace treated_20`i'_sim = 1 if min_dist_20`i'_sim <= 4000
+	replace treated_20`i'_sim = 1 if (min_dist_20`i'_sim <= 4000) & (year == "2010-2014")
 }
+
+forval i=15(1)18{
+	generate treated_20`i'_sim = 0
+	replace treated_20`i'_sim = 1 if (min_dist_20`i'_sim <= 4000) & (year == "2015-2019")
+}
+
+***BETWEEN 4KM AND 20KM FOR EACH YEAR***
 
 forval i=5(1)9{
 	generate treated_200`i'_sim4 = 0
-	replace treated_200`i'_sim4 = 1 if min_dist_200`i'_sim > 4000 & min_dist_200`i'_sim <= 20000
+	replace treated_200`i'_sim4 = 1 if (min_dist_200`i'_sim > 4000) & (min_dist_200`i'_sim <= 20000) & (year == "2005-2009")
 }
 
-forval i=10(1)18{
+forval i=10(1)14{
 	generate treated_20`i'_sim4 = 0
-	replace treated_20`i'_sim4 = 1 if min_dist_20`i'_sim > 4000 & min_dist_20`i'_sim <= 20000
+	replace treated_20`i'_sim4 = 1 if (min_dist_20`i'_sim > 4000) & (min_dist_20`i'_sim <= 20000) & (year == "2010-2014")
 }
+
+forval i=15(1)18{
+	generate treated_20`i'_sim4 = 0
+	replace treated_20`i'_sim4 = 1 if (min_dist_20`i'_sim > 4000) & (min_dist_20`i'_sim <= 20000) & (year == "2015-2019")
+}
+
+***OVER 20KM FOR EACH YEAR (FOR SUMM STATS)***
 
 forval i=5(1)9{
 	generate treated_200`i'_sim20 = 0
-	replace treated_200`i'_sim20 = 1 if min_dist_200`i'_sim > 20000
+	replace treated_200`i'_sim20 = 1 if (min_dist_200`i'_sim > 20000) & (year == "2005-2009")
 }
 
-forval i=10(1)18{
+forval i=10(1)14{
 	generate treated_20`i'_sim20 = 0
-	replace treated_20`i'_sim20 = 1 if min_dist_20`i'_sim > 20000
+	replace treated_20`i'_sim20 = 1 if (min_dist_20`i'_sim > 20000) & (year == "2010-2014")
 }
 
-***Generate Dummy by Kilometers By Fire Year***
+forval i=15(1)18{
+	generate treated_20`i'_sim20 = 0
+	replace treated_20`i'_sim20 = 1 if (min_dist_20`i'_sim > 20000) & (year == "2015-2019")
+}
 
-***For =< 4km***
+***FIRE DUMMIES BY PERIOD***
+
+***fire_4km_2005 is for fire within 4km in the 2005-2009 period ---> pre period control***
 
 generate fire_4km_2005 = 0
 
@@ -113,11 +138,15 @@ forval i=5(1)9{
 	replace fire_4km_2005 = 1 if treated_200`i'_sim == 1 
 }
 
+***fire_4km_2010 is for fire within 4km in the 2010-2014 period ---> pre period control***
+
 generate fire_4km_2010 = 0
 
 forval i=10(1)14{
 	replace fire_4km_2010 = 1 if treated_20`i'_sim == 1
 }
+
+***fire_4km_2015 is for fire within 4km in 2015-2019 period (includes within 4km from a wildfire perimeter between 2015 and 2016-2018)***
 
 generate fire_4km_2015 = 0
 
@@ -125,7 +154,10 @@ forval i=15(1)18{
 	replace fire_4km_2015 = 1 if treated_20`i'_sim == 1
 }
 
-***For > 4km and <= 20km
+***REMEMBER: treated_2015_sim is the treatment I am interested in, which is within 4km from a wildfire perimeter in 2015 only***
+
+
+***fire_4_20km_2005 is for fire between 4km and 20km in the 2005-2009 period ---> pre period control****
 
 generate fire_4_20km_2005 = 0
 
@@ -133,11 +165,15 @@ forval i=5(1)9{
 	replace fire_4_20km_2005 = 1 if treated_200`i'_sim4 == 1 
 }
 
+***fire_4_20km_2010 is for fire between 4km and 20km in the 2010-2014 period ---> pre period control****
+
 generate fire_4_20km_2010 = 0
 
 forval i=10(1)14{
 	replace fire_4_20km_2010 = 1 if treated_20`i'_sim4 == 1
 }
+
+***fire_4_20km_2015 is for fire between 4km and 20km in the 2015-2019 period (includes between 4km and 20km from a wildfire in 2015 and 2016-2018)
 
 generate fire_4_20km_2015 = 0
 
@@ -145,7 +181,11 @@ forval i=15(1)18{
 	replace fire_4_20km_2015 = 1 if treated_20`i'_sim4 == 1
 }
 
-***For > 20km
+****REMEMBER: treated_2015_sim4 is the 4km-20km treatment I am interested in, which is between 4km-20km from a wildfire perimeter in 2015 only***
+
+***fire_20km_xxxx variables below are primarily for summary statistics***
+
+***fire_20km_2005 is dummy for block group beyond 20km from wildfire perimeter in 2005-2009 period***
 
 generate fire_20km_2005 = 0
 
@@ -153,11 +193,15 @@ forval i = 5(1)9{
 	replace fire_20km_2005 = 1 if treated_200`i'_sim20 == 1
 }
 
+***fire_20km_2010 is dummy for block group beyond 20km from wildfire perimeter in 2010-2014 period***
+
 generate fire_20km_2010 = 0
 
 forval i=10(1)14{
 	replace fire_20km_2010 = 1 if treated_20`i'_sim20 == 1
 }
+
+***fire_20km_2015 is dummy for block group beyond 20km from wildfire perimeter in 2015-2019 period***
 
 generate fire_20km_2015 = 0
 
@@ -171,12 +215,18 @@ generate time = 0
 replace time = 2 if year == "2015-2019"
 replace time = 1 if year == "2010-2014"
 
+**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
 ****DESCRIPTIVE STATISTICS****
+
+***post_fire is dummy for within 4km from a wildfire perimeter across all periods***
 
 gen post_fire = 0
 replace post_fire = 1 if treated_2005_sim == 1 | treated_2006_sim == 1 | treated_2007_sim == 1 | treated_2008_sim == 1 | treated_2009_sim == 1 | treated_2010_sim == 1 | treated_2011_sim == 1 | treated_2012_sim == 1 | treated_2013_sim == 1 | treated_2014_sim == 1 | treated_2015_sim == 1 | treated_2016_sim == 1 | treated_2017_sim == 1 | treated_2018_sim == 1
 
 label variable post_fire "Block Group Close to Wildfire"
+
+***descriptive statistics comparing average median price of homes within and not within 4km from wildfire perimeter for each period***
 
 estpost tabstat medval lowval upval if time == 0, statistics(mean median) by(post_fire)
 
@@ -214,6 +264,8 @@ esttab using tablesummstat_new.tex, varwidth(50) modelwidth(10 20 10 10) cell((m
 
 eststo clear 
 
+***table below is just the reformated version of the sum stats table above, comparing average median property values within and not within 4km from a wildfire perimeter***
+
 mat T = J(3,5,.)
 
 ttest medval if time == 0, by(post_fire)
@@ -245,6 +297,7 @@ mat rownames T = medval0 medval1 medval2
 frmttable using ttest.tex, statmat(T) varlabels replace ///
 	ctitle("", Sample1mean, Sample2mean, N_1, N_2, "p-value")
 
+eststo clear
 
 ***Categories of Distances and Years - Number of Observations***
 
@@ -255,6 +308,9 @@ esttab, varwidth(20) modelwidth(10 20 10 10) cell((sum(label(Count)))) label tit
 esttab using distance_category.tex, varwidth(20) modelwidth(10 20 10 10) cell((sum(label(Count)))) label title("Wildfires by Years and Distance" ) nonumber replace
 
 eststo clear
+
+****Generated Non-Overlapping Category Tabulations for Number of Block Groups within 4km, 4km-20km, and beyond 20km****
+****For Over Lapping re-generate treated variables 'treated_xxxx_simxx' within year condition '& year == 'xxxx-xxxx'' when intially defining categories above, I made them non-overlapping for the regression analysis****
 
 generate firebin_2005_2009 = 0
 replace firebin_2005_2009 = 3 if treated_2005_sim20 == 1 | treated_2006_sim20 == 1 | treated_2007_sim20 == 1 | treated_2008_sim20 == 1 | treated_2009_sim20 == 1
@@ -303,7 +359,11 @@ eststo clear
 
 ***firebin_****_**** == 1 if <= 4km, firebin_****_**** == 2 if <4km and <= 20km, firebin_****_**** == 3 if > 20km****
 
+**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
 ***REGRESSIONS****
+
+***Define global variables****
 
 global race race_2 race_3 race_4 race_5 race_6 race_7 
 global travel travel_2 travel_3 travel_4 travel_5 travel_6 travel_7 travel_8 travel_9 travel_10 travel_11 travel_12
@@ -314,6 +374,9 @@ global mortag mortag_3 mortag_4 mortag_5
 
 ***mortag_2 mortag_3 mortag_4 are sub categories of mortag_1
 ***took out race 1, travel_1, educ_1, built_1, nobedroom, mortag_2 are the base categories
+
+
+****fire_2015 treatment is for within 4km from a wildfire perimeter in either both periods & only in 2015.****
 
 generate fire_2015 = 0 
 replace fire_2015 = 1 if (treated_2005_sim == 1 | treated_2006_sim == 1 | treated_2007_sim == 1 | treated_2008_sim == 1 | treated_2009_sim == 1 | treated_2010_sim == 1 | treated_2011_sim == 1 | treated_2012_sim == 1 | treated_2013_sim == 1 | treated_2014_sim == 1) & (treated_2015_sim == 1)
@@ -332,7 +395,9 @@ reg medval fire_2015 $race $travel $educ $built $bdrm $mortag i.statea if time =
 
 reg medval fire_2015 $race $travel $educ $built $bdrm $mortag i.statea if time == 2, vce(robust)
 
-**Crosssectional regresssions by period are not significant
+***Crosssectional regresssions by period are not significant/collinear***
+
+***SETUP FOR FIRST DIFFERENCE REGRESSIONS***
 
 sort gisjoin year 
 
@@ -391,8 +456,10 @@ by gisjoin: gen dlnmedval = lnmedval - lnmedval[_n-1]
 ***REG (3)-TABLE 1***
 eststo: reg dlnmedval fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
 
+***GRAPHS OF MAIN ANALYSIS: PLOTTING COEFFICIENT ON fire_2015 AGAINST DIFFERENT CUTOFF VALUES***
+***SAVED OUTPUT IN EXCELL THEN USED PYTHON TO PLOT***
 
-
+***2KM TO 30KM***
 
 forval i = 2000(500)30000{
 	generate fire_2015_`i' = 0
@@ -437,6 +504,8 @@ forval i = 2000(500)30000{
 	putexcel D`xlsrow' = (ub_cons`i')
 	local xlsrow = `xlsrow'+1
 	}
+	
+***2KM TO 100KM***
 	
 ***The effect doesn't leave the CI for the 4km bound will see what happens when I extend the bounds up to 100 km 
 
@@ -483,8 +552,394 @@ forval i = 2000(500)100000{
 	putexcel D`xlsrow' = (ub_cons`i')
 	local xlsrow = `xlsrow'+1
 	}
+
 	
+****ROBUSTNESS SECTION****
+**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+***A) Regression on only treated in 2015 within 4km, and 4km-20km controlling for previous wildfires
+
+***fire_4km_2005 is for fire within 4km in the 2005-2009 period ---> pre period control***
+
+***fire_4km_2010 is for fire within 4km in the 2010-2014 period ---> pre period control***
+
+***treated_2015_sim dummy for within 4km only in 2015 in period 2015-2019
+
+***fire_4km_2005_2010 is a pre fire control variable, 1 if fire within 4km in 2005-2009 period or fire within 4km in 2010-2014 period
+
+reg medval treated_2015_sim fire_4km_2005 fire_4km_2010 $race $travel $educ $built $bdrm $mortag i.time i.statea, robust
+
+***fire_4_20km_2005 is for fire between 4km and 20km in the 2005-2009 period ---> pre period control****
+***fire_4_20km_2010 is for fire between 4km and 20km in the 2010-2014 period ---> pre period control****
+***Now with 4km-20km ring and pre period controls for those rings***
+***treated_2015_sim4 is dummy for within 4-20km only in 2015 in period 2015-2019***
+
+reg medval treated_2015_sim treated_2015_sim4 fire_4km_2005 fire_4km_2010 fire_4_20km_2005 fire_4_20km_2010 $race $travel $educ $built $bdrm $mortag i.time i.statea, robust
+
+***Now significant in the 4km-20km ring for 2015 treatment only for simple OLS***
+
+***STATA drop out fire_4km_2005 in first difference since they only occur in the 2005-2009 period***
+***Not really capturing first period wildfires in this specification***
+
+
+***Generates fire_4km_2005_2010 dummy, which is a dummy for a home within 4km from a 2005-2009 fire and a 2010-2014 fire, I am creating this as the fire_4km_2005 dummy would otherwise drop out in the first difference regression***
+
+generate fire_4km_2005_2010 = 0
+replace fire_4km_2005_2010 = 1 if fire_4km_2005 == 1
+***Puts Dummys in 2010-2014, and 2015-2019 years if Dummy in 2005-2009 is 1. Spreads 2005-2009 dummy across years in each panel***
+bysort gisjoin (year): replace fire_4km_2005_2010 = fire_4km_2005_2010[1]
+***Puts dummy for 2010-2014 for homes within 4km of wildfire in 2010-2014***
+replace fire_4km_2005_2010 = 1 if fire_4km_2010 == 1
+***Removes extra dummy in each panel which was created in the ealier command for the last year***
+replace fire_4km_2005_2010 = 0 if year == "2015-2019"
+
+***FD regression for within 4km controlling for all fires within 4km in the pre period***
+
+reg dmedval treated_2015_sim fire_4km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***Generate fire_4_20km_2005_2010 dummy, which is a dummy for a home within 4km-20km from a 2005-2009 fire and a 2010-2014 fire, creating this as fire_4_20km_2005 dummy would otherwise drop out in first difference regression***
+
+generate fire_4_20km_2005_2010 = 0
+replace fire_4_20km_2005_2010 = 1 if fire_4_20km_2005 == 1
+bysort gisjoin (year): replace fire_4_20km_2005_2010 = fire_4_20km_2005_2010[1]
+replace fire_4_20km_2005_2010 = 1 if fire_4_20km_2010 == 1
+replace fire_4_20km_2005_2010 = 0 if year == "2015-2019"
+
+***FD regession for within 4km and 4km-20km controlling for all fires within 4km and 4km-20km in the pre period***
+
+reg dmedval treated_2015_sim treated_2015_sim4 fire_4km_2005_2010 fire_4_20km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***B) Non-Overlapping Treatment Bands within 4km, 4-10km, 10km-15km, 15km-20km
+
+***BETWEEN 4KM AND 10KM FOR EACH YEAR***
+
+forval i=5(1)9{
+	generate treated_200`i'_sim4_10 = 0
+	replace treated_200`i'_sim4_10 = 1 if (min_dist_200`i'_sim > 4000) & (min_dist_200`i'_sim <= 10000) & (year == "2005-2009")
+}
+
+forval i=10(1)14{
+	generate treated_20`i'_sim4_10 = 0
+	replace treated_20`i'_sim4_10 = 1 if (min_dist_20`i'_sim > 4000) & (min_dist_20`i'_sim <= 10000) & (year == "2010-2014")
+}
+
+forval i=15(1)18{
+	generate treated_20`i'_sim4_10 = 0
+	replace treated_20`i'_sim4_10 = 1 if (min_dist_20`i'_sim > 4000) & (min_dist_20`i'_sim <= 10000) & (year == "2015-2019")
+}
+
+***BETWEEN 10KM AND 15KM FOR EACH YEAR***
+
+forval i=5(1)9{
+	generate treated_200`i'_sim10_15 = 0
+	replace treated_200`i'_sim10_15 = 1 if (min_dist_200`i'_sim > 10000) & (min_dist_200`i'_sim <= 15000) & (year == "2005-2009")
+}
+
+forval i=10(1)14{
+	generate treated_20`i'_sim10_15 = 0
+	replace treated_20`i'_sim10_15 = 1 if (min_dist_20`i'_sim > 10000) & (min_dist_20`i'_sim <= 15000) & (year == "2010-2014")
+}
+
+forval i=15(1)18{
+	generate treated_20`i'_sim10_15 = 0
+	replace treated_20`i'_sim10_15 = 1 if (min_dist_20`i'_sim > 10000) & (min_dist_20`i'_sim <= 15000) & (year == "2015-2019")
+}
+
+***BETWEEN 15KM AND 20KM FOR EACH YEAR***
+
+forval i=5(1)9{
+	generate treated_200`i'_sim15_20 = 0
+	replace treated_200`i'_sim15_20 = 1 if (min_dist_200`i'_sim > 15000) & (min_dist_200`i'_sim <= 20000) & (year == "2005-2009")
+}
+
+forval i=10(1)14{
+	generate treated_20`i'_sim15_20 = 0
+	replace treated_20`i'_sim15_20 = 1 if (min_dist_20`i'_sim > 15000) & (min_dist_20`i'_sim <= 20000) & (year == "2010-2014")
+}
+
+forval i=15(1)18{
+	generate treated_20`i'_sim15_20 = 0
+	replace treated_20`i'_sim15_20 = 1 if (min_dist_20`i'_sim > 15000) & (min_dist_20`i'_sim <= 20000) & (year == "2015-2019")
+}
+
+
+***FIRE DUMMY BY PERIOD***
+
+***fire_4_10km_2005 is for fire between 4km and 10km in the 2005-2009 period ---> pre period control****
+
+generate fire_4_10km_2005 = 0
+
+forval i=5(1)9{
+	replace fire_4_10km_2005 = 1 if treated_200`i'_sim4_10 == 1 
+}
+
+***fire_4_10km_2010 is for fire between 4km and 10km in the 2010-2014 period ---> pre period control****
+
+generate fire_4_10km_2010 = 0
+
+forval i=10(1)14{
+	replace fire_4_10km_2010 = 1 if treated_20`i'_sim4_10 == 1
+}
+
+***fire_4_10km_2015 is for fire between 4km and 10km in the 2015-2019 period (includes between 4km and 10km from a wildfire in 2015 and 2016-2018)
+
+generate fire_4_10km_2015 = 0
+
+forval i=15(1)18{
+	replace fire_4_10km_2015 = 1 if treated_20`i'_sim4_10 == 1
+}
+
+***Remember: Variable of interest is treated_2015_sim4_10 . 
+
+
+***fire_10_15km_2005 is for fire between 10km and 15km in the 2005-2009 period ---> pre period control****
+
+generate fire_10_15km_2005 = 0
+
+forval i=5(1)9{
+	replace fire_10_15km_2005 = 1 if treated_200`i'_sim10_15 == 1 
+}
+
+***fire_10_15km_2010 is for fire between 10km and 15km in the 2010-2014 period ---> pre period control****
+
+generate fire_10_15km_2010 = 0
+
+forval i=10(1)14{
+	replace fire_10_15km_2010 = 1 if treated_20`i'_sim10_15 == 1
+}
+
+***fire_10_15km_2015 is for fire between 10km and 15km in the 2015-2019 period (includes between 10km and 15km from a wildfire in 2015 and 2016-2018)
+
+generate fire_10_15km_2015 = 0
+
+forval i=15(1)18{
+	replace fire_10_15km_2015 = 1 if treated_20`i'_sim10_15 == 1
+}
+
+***Remember: Variable of interest is treated_2015_sim10_15 . 
+
+
+***fire_15_20km_2005 is for fire between 15km and 20km in the 2005-2009 period ---> pre period control****
+
+generate fire_15_20km_2005 = 0
+
+forval i=5(1)9{
+	replace fire_15_20km_2005 = 1 if treated_200`i'_sim15_20 == 1 
+}
+
+***fire_15_20km_2010 is for fire between 15km and 20km in the 2010-2014 period ---> pre period control****
+
+generate fire_15_20km_2010 = 0
+
+forval i=10(1)14{
+	replace fire_15_20km_2010 = 1 if treated_20`i'_sim15_20 == 1
+}
+
+***fire_15_20km_2015 is for fire between 15km and 20km in the 2015-2019 period (includes between 15km and 20km from a wildfire in 2015 and 2016-2018)
+
+generate fire_15_20km_2015 = 0
+
+forval i=15(1)18{
+	replace fire_15_20km_2015 = 1 if treated_20`i'_sim15_20 == 1
+}
+
+***Remember: Variable of interest is treated_2015_sim15_20.
 	
+***Now Run OLS with new cuttoff points***
+
+***No pre fire controls	
+reg medval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 $race $travel $educ $built $bdrm $mortag i.time i.statea, robust	
+
+***With pre fire controls 
+
+reg medval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 fire_4km_2005 fire_4km_2010 fire_4_10km_2005 fire_4_10km_2010 fire_10_15km_2005 fire_10_15km_2010 fire_15_20km_2005 fire_15_20km_2010 $race $travel $educ $built $bdrm $mortag i.time i.statea, robust	
+***Not significant within 4km or 4km-10km. 
+
+***Generate dummy which incorporates fires in 2005 period for FD regression pre-period fire controls, since FD drops 2005 fires if I do not create a dummy which incorporate wildfires for each distance***
+
+generate fire_4_10km_2005_2010 = 0
+replace fire_4_10km_2005_2010 = 1 if fire_4_10km_2005 == 1
+bysort gisjoin (year): replace fire_4_10km_2005_2010 = fire_4_10km_2005_2010[1]
+replace fire_4_10km_2005_2010 = 1 if fire_4_10km_2010 == 1
+replace fire_4_10km_2005_2010 = 0 if year == "2015-2019"
+	
+generate fire_10_15km_2005_2010 = 0
+replace fire_10_15km_2005_2010 = 1 if fire_10_15km_2005 == 1
+bysort gisjoin (year): replace fire_10_15km_2005_2010 = fire_10_15km_2005_2010[1]
+replace fire_10_15km_2005_2010 = 1 if fire_10_15km_2010 == 1
+replace fire_10_15km_2005_2010 = 0 if year == "2015-2019"
+
+generate fire_15_20km_2005_2010 = 0
+replace fire_15_20km_2005_2010 = 1 if fire_15_20km_2005 == 1
+bysort gisjoin (year): replace fire_15_20km_2005_2010 = fire_15_20km_2005_2010[1]
+replace fire_15_20km_2005_2010 = 1 if fire_15_20km_2010 == 1
+replace fire_15_20km_2005_2010 = 0 if year == "2015-2019"	
+
+***Now run FD regressions with pre-period controls for new categories***
+
+**No pre fire controls
+reg dmedval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+reg dlnmedval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+**With pre fire controls
+reg dmedval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 fire_4km_2005_2010 fire_4_10km_2005_2010 fire_10_15km_2005_2010 fire_15_20km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+reg dlnmedval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 fire_4km_2005_2010 fire_4_10km_2005_2010 fire_10_15km_2005_2010 fire_15_20km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***Significant within 4km and 4km-10km, but not significant beyond 10km. 	
+
+***************************************************************************************************************************************************************************************************************************************************
+
+***Core Assumption: There are no time-varying factors within a block-group that are correlated with both property values and being within 4km away from a wildfire perimeter. --> regress growth rate of house prices between 2005-2009 and 2010-2014 and regress with original specificaton and regression coefficient should be close to zero if the core assumption is true***
+
+sort gisjoin year 
+
+by gisjoin: gen growth_medval_2005_2010 = lnmedval[2] - lnmedval[1]
+
+**growth_medval_2005_2010 is the growth rate in median property values between 2005-2009 and 2010-2014, with controls first 2005-2009 will drop out and growth over that period will be regressed on later fires***
+
+***Original specification where dummy fire_2015 is within 4km for 2015 fire and at least one previous fire***
+
+reg growth_medval_2005_2010 fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+reg dlnmedval fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+***regressing on growth_medval_2005_2010 shows effect is not significant, but is in original spec, this is evidence to suggest there are no time varying factors correlated wth both property values and being within 4km from a 2015 wildfire. 
+
+reg growth_medval_2005_2010 treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+reg growth_medval_2005_2010 treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 fire_4km_2005_2010 fire_4_10km_2005_2010 fire_10_15km_2005_2010 fire_15_20km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+reg dlnmedval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 fire_4km_2005_2010 fire_4_10km_2005_2010 fire_10_15km_2005_2010 fire_15_20km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***beyond 4km it seems like the core assumption is violated and there may be other time varying factors correlated with property values and being within 4km from a wildfire.***
+
+*****COMPARE MEANS FOR TREATED VERSUS UNTREATED GROUPS ACROSS CONTROL VARIABLES*******
+
+eststo clear 
+
+estpost ttest race_1 race_2 race_3 race_4 race_5 race_6 race_7 travel_1 travel_2 travel_3 travel_4 travel_5 travel_6 travel_7 travel_8 travel_9 travel_10 travel_11 travel_12 educ_1 educ_2 educ_3 educ_4 educ_5 educ_6 educ_7 educ_8 educ_9 educ_10 educ_11 educ_12 educ_13 educ_14 educ_15 educ_16 built_1 built_2 built_3 built_4 built_5 built_6 built_7 built_8 nobedroom bdrm_1 bdrm_2 bdrm_3 bdrm_4 bdrm_5 mortag_1 mortag_2 mortag_3 mortag_4 mortag_5, by(fire_2015) unequal
+
+esttab, wide nonumber mtitle("diff.")
+
+eststo clear 
+
+estpost ttest race_1 race_2 race_3 race_4 race_5 race_6 race_7 travel_1 travel_2 travel_3 travel_4 travel_5 travel_6 travel_7 travel_8 travel_9 travel_10 travel_11 travel_12 educ_1 educ_2 educ_3 educ_4 educ_5 educ_6 educ_7 educ_8 educ_9 educ_10 educ_11 educ_12 educ_13 educ_14 educ_15 educ_16 built_1 built_2 built_3 built_4 built_5 built_6 built_7 built_8 nobedroom bdrm_1 bdrm_2 bdrm_3 bdrm_4 bdrm_5 mortag_1 mortag_2 mortag_3 mortag_4 mortag_5, by(treated_2015_sim) unequal
+
+esttab, wide nonumber mtitle("diff.")
+
+eststo clear
+
+****Extend Treatment Dummy out to 10KM given previous robustness regression where effect was significant within 10KM****
+
+forval i=5(1)9{
+	generate treated_200`i'_within10 = 0
+	replace treated_200`i'_within10 = 1 if (min_dist_200`i'_sim <= 10000) & (year == "2005-2009")
+}
+
+forval i=10(1)14{
+	generate treated_20`i'_within10 = 0
+	replace treated_20`i'_within10 = 1 if (min_dist_20`i'_sim <= 10000) & (year == "2010-2014")
+}
+
+forval i=15(1)18{
+	generate treated_20`i'_within10 = 0
+	replace treated_20`i'_within10 = 1 if (min_dist_20`i'_sim <= 10000) & (year == "2015-2019")
+}
+
+generate fire_within_10km = 0
+
+forval i=5(1)9{
+	replace fire_within_10km = 1 if treated_200`i'_within10 == 1 
+}
+
+forval i=10(1)18{
+	replace fire_within_10km = 1 if treated_20`i'_within10 == 1
+}
+
+eststo clear 
+
+estpost ttest race_1 race_2 race_3 race_4 race_5 race_6 race_7 travel_1 travel_2 travel_3 travel_4 travel_5 travel_6 travel_7 travel_8 travel_9 travel_10 travel_11 travel_12 educ_1 educ_2 educ_3 educ_4 educ_5 educ_6 educ_7 educ_8 educ_9 educ_10 educ_11 educ_12 educ_13 educ_14 educ_15 educ_16 built_1 built_2 built_3 built_4 built_5 built_6 built_7 built_8 nobedroom bdrm_1 bdrm_2 bdrm_3 bdrm_4 bdrm_5 mortag_1 mortag_2 mortag_3 mortag_4 mortag_5, by(fire_within_10km) unequal
+
+esttab, wide nonumber mtitle("diff.")
+
+eststo clear
+
+***Even within 10km as the dummy variable between treatment and control there appears to be a significant statistical difference other than the treatment effect, therefore I cannot rule out that there is a relationship between the treatment and controls other than the treatment effect ****
+
+
+***F-test to see if there is joint significance in explanatory variables***
+
+reg dmedval fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+test drace_2=drace_3=drace_4=drace_5=drace_6=drace_7=dtravel_2=dtravel_3=dtravel_4=dtravel_5=dtravel_6=dtravel_7=dtravel_8=dtravel_9=dtravel_10=dtravel_11=dtravel_12=deduc_2=deduc_3=deduc_4=deduc_5=deduc_6=deduc_7=deduc_8=deduc_9=deduc_10=deduc_11=deduc_12=deduc_13=deduc_14=deduc_15=deduc_16=dbuilt_2=dbuilt_3=dbuilt_4=dbuilt_5=dbuilt_6=dbuilt_7=dbuilt_8=dbdrm_1=dbdrm_2=dbdrm_3=dbdrm_4=dbdrm_5=dmortag_3=dmortag_4=dmortag_5=0
+
+***F-test concludes there is joint significance across the control variables for the original regression***
+
+***REGRESS CONTROLS ON TREATMENT DUMMY TO TEST FOR RANDOM TREATMENT --> EFFECT SHOULD BE CLOSE TO ZERO***
+
+reg fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+reg treated_2015_sim $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***Both treatments show insignificance across controls***
+
+***Regress controls on treatment individually***
+
+foreach var in drace_2 drace_3 drace_4 drace_5 drace_6 drace_7 dtravel_2 dtravel_3 dtravel_4 dtravel_5 dtravel_6 dtravel_7 dtravel_8 dtravel_9 dtravel_10 dtravel_11 dtravel_12 deduc_2 deduc_3 deduc_4 deduc_5 deduc_6 deduc_7 deduc_8 deduc_9 deduc_10 deduc_11 deduc_12 deduc_13 deduc_14 deduc_15 deduc_16 dbuilt_2 dbuilt_3 dbuilt_4 dbuilt_5 dbuilt_6 dbuilt_7 dbuilt_8 dbdrm_1 dbdrm_2 dbdrm_3 dbdrm_4 dbdrm_5 dmortag_3 dmortag_4 dmortag_5{
+	reg fire_2015 `var' i.time, vce(cluster gisjoin)
+	display `var'
+}
+
+***Most variables appear to be statistically insignificant --> good as it shows that the controls and treatment are not related***
+
+***WILDFIRE HAZARD POTENTIAL CONTROL (may not have time to do)***
+
+
+***BOX COX TRANSFORMATION****
+***ref: https://data.princeton.edu/wws509/stata/c2s10***
+***box cox on dependent variable
+
+***Run on original model***
+
+boxcox medval fire_2015 $race $travel $educ $built $bdrm $mortag, vce(robust) model(lhs) nolog
+
+ereturn list
+
+***Save maximum log liklihood as a scalar***
+
+scalar maxlogL = e(ll)
+
+***generate variables to store exponents (p) and log liklihood (logL)***
+drop p 
+drop logL
+
+gen p = .
+
+gen logL = .
+
+local I = 1
+
+forvalues p = -1(0.5)2	{
+	quietly boxcox medval fire_2015 $race $travel $educ $built $bdrm $mortag, vce(robust) model(lhs) from(`p',copy) iterate(0)
+	quietly replace p = `p' in `I'
+	quietly replace logL = e(ll) in `I'
+	local I = `I'+ 1
+}
+
+drop cb
+**gen cb =  maxlogL - 3.84/2  if p > -1 & p < 1.5
+**Upper bound on chi-square with 100 df os 124.342
+gen cb =  maxlogL - 124.342/2  if p > -1 & p < 1
+
+graph twoway (mspline logL p, bands(7)) (line cb p) ,   ///
+        title("Figure: Box-Cox Profile Log-Likelihood")  ///
+        xtitle("lambda") ytitle("log-likelihood") legend(off)
+		
+***suggests the transform doesn't really matter but the log liklihood shows that the ln transform on the dependent is a close approximation to be correct for the distribution in median property values***
+
+
+*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************	
 ***Run regresssions on dummy categories within 4km and 4km-20km
 ***Dummy for within 4-20km for 2015 and years before. 1,1 and 0,1. 
 generate fire_2015_4_20km = 0
