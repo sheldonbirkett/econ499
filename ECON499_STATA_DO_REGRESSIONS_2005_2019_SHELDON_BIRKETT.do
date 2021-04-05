@@ -445,6 +445,11 @@ replace fire_2015 = 1 if treated_2015_sim == 1
 
 **reg medval fire_2015
 
+// reg medval fire_2015 $race $travel $educ $built $bdrm $mortag i.statea i.time, vce(robust)
+//
+// reg medval fire_2015 $race $travel $educ $built $bdrm $mortag i.statea i.time, vce(cluster gisjoin)
+
+
 eststo clear
 
 ***REG (1) -TABLE 1***
@@ -1112,10 +1117,6 @@ test drace_2=drace_3=drace_4=drace_5=drace_6=drace_7=dtravel_2=dtravel_3=dtravel
 
 ***REGRESS CONTROLS ON TREATMENT DUMMY TO TEST FOR RANDOM TREATMENT --> EFFECT SHOULD BE CLOSE TO ZERO***
 
-reg fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
-
-reg treated_2015_sim $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
-
 ***Both treatments show insignificance across controls***
 
 ***Regress controls on treatment individually***
@@ -1225,6 +1226,57 @@ eststo clear
 
 ***Most variables appear to be statistically insignificant --> good as it shows that the controls and treatment are not related***
 
+rename median median_whp
+
+label variable median_whp "Median WHP 2020"
+
+***reg fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***REG (1) Table 8 ---Controls on treated dummy fire_2015
+eststo clear 
+eststo: quietly reg fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***REG (2) Table 8 --- Controls on treated dummy treated_2015_sim (same as fire_2015)
+
+eststo: quietly reg treated_2015_sim $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***REG (3) Table 8 --_ Controls on treated dummy treated_2015_sim with pre-fire control
+
+eststo: quietly reg treated_2015_sim fire_4km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+***REG (4) Table 8 --- OLS Controls on treated dummy treated_2015_sim with pre-fire control and WHP 
+
+***eststo: quietly reg treated_2015_sim fire_4km_2005_2010 $race $travel $educ $built $bdrm $mortag i.median_whp i.time, robust  
+
+esttab, label varwidth(52) modelwidth(30) title("First Difference Regression of Controls on Within 4km from a 2015 Wildfire Perimeter") scalars(r2) order(fire_4km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag) keep(fire_4km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag) addnotes("Models (1)-(3) use time fixed effects and standard errors clustered on block groups.")
+
+esttab using fd_reg_on_treatment_table8.tex, label varwidth(52) modelwidth(30) title("First Difference Regression of Controls on Within 4km from a 2015 Wildfire Perimeter") scalars(r2) order(fire_4km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag) keep(fire_4km_2005_2010 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag) addnotes("Models (1)-(3) use time fixed effects and standard errors clustered on block groups.") replace 
+
+eststo clear 
+
+***REG (1) Table 9 -- Controls on treated dummy fire_2015
+
+eststo: quietly reg fire_2015 $race $travel $educ $built $bdrm $mortag i.statea i.time, vce(robust)
+
+***REG (2) Table 9 -- Controls on treated_2015_sim
+
+eststo: quietly reg treated_2015_sim $race $travel $educ $built $bdrm $mortag i.statea i.time, vce(robust)
+
+***REG (3) Table 9 -- Controls on treated_2015_sim with 4km pre fire controls
+
+eststo: quietly reg treated_2015_sim fire_4km_2005 fire_4km_2010 $race $travel $educ $built $bdrm $mortag i.time i.statea, vce(robust)
+
+***REG (4) Table 9 -- Controls on treated_2015_sim with 4km pre fire controls and WHP 2020 control 
+
+eststo: quietly reg treated_2015_sim fire_4km_2005 fire_4km_2010 $race $travel $educ $built $bdrm $mortag i.median_whp i.time i.statea, vce(robust)
+
+esttab, label varwidth(52) modelwidth(30) title("OLS Regression of Controls on Within 4km from a 2015 Wildfire Perimeter") scalars(r2) order(fire_4km_2005 fire_4km_2010 $race $travel $educ $built $bdrm $mortag 1.median_whp 2.median_whp 3.median_whp 4.median_whp 5.median_whp) keep(fire_4km_2005 fire_4km_2010 $race $travel $educ $built $bdrm $mortag 1.median_whp 2.median_whp 3.median_whp 4.median_whp 5.median_whp) addnotes("Models (1)-(4) use state and time fixed effects with robust standard errors." "Model (3) and (4) have pre-fire controls for wildfires within 4km from a block group in 2005-2009 and 2010-2014 periods." "Model (4) includes the 2020 Wildfire Hazard Potential (WHP) control.") 
+
+esttab using ols_reg_on_treatment_table9.tex, label varwidth(52) modelwidth(30) title("OLS Regression of Controls on Within 4km from a 2015 Wildfire Perimeter") scalars(r2) order(fire_4km_2005 fire_4km_2010 $race $travel $educ $built $bdrm $mortag 1.median_whp 2.median_whp 3.median_whp 4.median_whp 5.median_whp) keep(fire_4km_2005 fire_4km_2010 $race $travel $educ $built $bdrm $mortag 1.median_whp 2.median_whp 3.median_whp 4.median_whp 5.median_whp) addnotes("Models (1)-(4) use state and time fixed effects with robust standard errors." "Model (3) and (4) have pre-fire controls for wildfires within 4km from a block group in 2005-2009 and 2010-2014 periods." "Model (4) includes the 2020 Wildfire Hazard Potential (WHP) control.") replace 
+
+eststo clear 
+
+
 ******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
 
 ***WILDFIRE HAZARD POTENTIAL CONTROL (may not have time to do)***
@@ -1233,7 +1285,7 @@ eststo clear
 
 eststo clear 
 
-rename median median_whp
+
 
 ***OLS with WHP control which is time invariant as it is an estimate over many years and I did not get previous year estimates****
 
@@ -1263,7 +1315,7 @@ eststo: quietly reg medval treated_2015_sim treated_2015_sim4_10 treated_2015_si
 
 eststo: quietly reg medval treated_2015_sim treated_2015_sim4_10 treated_2015_sim10_15 treated_2015_sim15_20 fire_4km_2005 fire_4km_2010 fire_4_10km_2005 fire_4_10km_2010 fire_10_15km_2005 fire_10_15km_2010 fire_15_20km_2005 fire_15_20km_2010 $race $travel $educ $built $bdrm $mortag i.median_whp i.time i.statea, robust
 
-label variable median_whp "Median WHP 2020"
+
 
 label variable fire_4_10km_2005 "Pre-Fire 4km-10km 2005-2009" 
 label variable fire_4_10km_2010 "Pre-Fire 4km-10km 2010-2014"
