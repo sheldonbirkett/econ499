@@ -283,19 +283,31 @@ replace time = 1 if year == "2010-2014"
 gen post_fire = 0
 replace post_fire = 1 if treated_2005_sim == 1 | treated_2006_sim == 1 | treated_2007_sim == 1 | treated_2008_sim == 1 | treated_2009_sim == 1 | treated_2010_sim == 1 | treated_2011_sim == 1 | treated_2012_sim == 1 | treated_2013_sim == 1 | treated_2014_sim == 1 | treated_2015_sim == 1 | treated_2016_sim == 1 | treated_2017_sim == 1 | treated_2018_sim == 1
 
+rename median median_whp
+
+label variable median_whp "Median WHP 2020"
+
 label variable post_fire "Block Group Close to Wildfire"
 
 ***descriptive statistics comparing average median price of homes within and not within 4km from wildfire perimeter for each period***
 
-estpost tabstat medval lowval upval if time == 0, statistics(mean median) by(post_fire)
+estpost tabstat medval median_whp lowval upval if time == 0, statistics(mean median) by(post_fire)
 
-esttab, varwidth(20) cell(medval) unstack nonumber collabels(none) title("Comparison of Median Property Values Within 4 km Distance from Wildfire Perimeter 2005-2009") eqlabels(, lhs("Within 4 km"))
+esttab, varwidth(20) cell(medval) unstack nonumber collabels(none) title("Comparison of Median Property Values Within 4 km Distance from Wildfire Perimeter 2005-2009") eqlabels(, lhs("Within 4 km")) 
 
 esttab using comparison_table_2005_new.tex, varwidth(20) cell(medval) unstack nonumber collabels(none) title("Comparison of Median Property Values Within 4 km Distance from Wildfire Perimeter 2005-2009") eqlabels(, lhs("Within 4 km")) replace
 
+eststo clear
+
+estpost tabstat median_whp medval if time == 0, statistics(mean median) by(post_fire)
+
+esttab, varwidth(20) cell(median_whp) unstack nonumber collabels(none) title("Comparison of WHP Within 4 km Distance from Wildfire Perimeter 2005-2009") eqlabels(, lhs("Within 4 km"))
+
+esttab using median_whp_comp2009.tex, varwidth(20) cell(median_whp) unstack nonumber collabels(none) title("Comparison of WHP Within 4 km Distance from Wildfire Perimeter 2005-2009") eqlabels(, lhs("Within 4 km")) replace
+
 eststo clear 
 
-estpost tabstat medval lowval upval if time == 1, statistics(mean median) by(post_fire)
+estpost tabstat medval median_whp lowval upval if time == 1, statistics(mean median) by(post_fire)
 
 esttab, varwidth(20) cell(medval) unstack nonumber collabels(none) title("Comparison of Median Property Values Within 4 km Distance from Wildfire Perimeter 2010-2014") eqlabels(, lhs("Within 4 km"))
 
@@ -303,11 +315,29 @@ esttab using comparison_table_2010_new.tex, varwidth(20) cell(medval) unstack no
 
 eststo clear 
 
-estpost tabstat medval lowval upval if time == 2, statistics(mean median) by(post_fire)
+estpost tabstat median_whp medval if time == 1, statistics(mean median) by(post_fire)
+
+esttab, varwidth(20) cell(median_whp) unstack nonumber collabels(none) title("Comparison of WHP Within 4 km Distance from Wildfire Perimeter 2010-2014") eqlabels(, lhs("Within 4 km"))
+
+esttab using median_whp_comp2014.tex, varwidth(20) cell(median_whp) unstack nonumber collabels(none) title("Comparison of WHP Within 4 km Distance from Wildfire Perimeter 2010-2014") eqlabels(, lhs("Within 4 km")) replace
+
+eststo clear 
+
+estpost tabstat medval median_whp lowval upval if time == 2, statistics(mean median) by(post_fire)
 
 esttab, varwidth(20) cell(medval) unstack nonumber collabels(none) title("Comparison of Median Property Values Within 4 km Distance from Wildfire Perimeter 2015-2019") eqlabels(, lhs("Within 4 km"))
 
 esttab using comparison_table_2015_new.tex, varwidth(20) cell(medval) unstack nonumber collabels(none) title("Comparison of Median Property Values Within 4 km Distance from Wildfire Perimeter 2015-2019") eqlabels(, lhs("Within 4 km")) replace
+
+eststo clear 
+
+eststo clear 
+
+estpost tabstat median_whp medval if time == 2, statistics(mean median) by(post_fire)
+
+esttab, varwidth(20) cell(median_whp) unstack nonumber collabels(none) title("Comparison of WHP Within 4 km Distance from Wildfire Perimeter 2015-2019") eqlabels(, lhs("Within 4 km"))
+
+esttab using median_whp_comp2019.tex, varwidth(20) cell(median_whp) unstack nonumber collabels(none) title("Comparison of WHP Within 4 km Distance from Wildfire Perimeter 2015-2019") eqlabels(, lhs("Within 4 km")) replace
 
 eststo clear 
 
@@ -1226,9 +1256,6 @@ eststo clear
 
 ***Most variables appear to be statistically insignificant --> good as it shows that the controls and treatment are not related***
 
-rename median median_whp
-
-label variable median_whp "Median WHP 2020"
 
 ***reg fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
 
@@ -1565,7 +1592,7 @@ eststo clear
 
 eststo clear 
 
-estpost summarize medval lnmedval dmedval dlnmedval average_mind_wildfire_sim_km built_1 $built $bdrm mortag_1 mortag_5
+estpost summarize medval lnmedval dmedval dlnmedval median_whp average_mind_wildfire_sim_km built_1 $built $bdrm mortag_1 mortag_5
 
 esttab, varwidth(50) modelwidth(10 20 10 10) cell((mean(label(Mean) fmt(2)) sd(label(Standard Deviation)) min(label(Min)) max(label(Max)))) addnotes("""*All variables below `Average Minimum Distance to a Wildfire Perimeter`are in proportion terms of the block group (e.g. 1 bedroom is proportion of homes in the block group with one bedroom)") label title("Summary Statistics Property Value and Block Group Housing Characteristics") nonumber
 
