@@ -50,6 +50,6 @@ Description of Code and Notebook Files Used in the Completion of this undergradu
   * Original code (outdated/didn't use) for getting ACS data through the Census API, but switched to IPUMS NHGIS to get ACS data since it was easier to extract data from. Census API had a bug which prevented me from extracting the relevant data. 
   
   
-Cleaned ACS/Wildfire Perimeter dataset not posted on Github, please contact for replication inquiries. 
+Cleaned ACS/Wildfire Perimeter dataset not posted on Github, please contact [sheldonbirkett@gmail.com](mailto:sheldonbirkett@gmail.com) for replication inquiries. 
 
 Author: Sheldon Birkett 
