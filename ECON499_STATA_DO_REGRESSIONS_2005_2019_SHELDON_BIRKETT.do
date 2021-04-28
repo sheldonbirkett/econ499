@@ -577,6 +577,38 @@ esttab using regresssions_thesis_table1.tex, label modelwidth(20) addnotes("Mode
 
 eststo clear 
 
+***TABLE OF HOW MAIN ESTIMATE CHANGES WHEN ADDING IN THE DEMOGRAPHIC AND NEIGHBOURHOOD CONTROLS - TABLE 23***
+
+***eststo: quietly reg medval fire_2015 $race $travel $educ $built $bdrm $mortag i.statea i.time, vce(robust)
+
+eststo clear 
+
+***REG (1) - TABLE 23***
+eststo: quietly reg dmedval fire_2015 i.time, vce(cluster gisjoin)
+
+***REG (2) - TABLE 23***
+eststo: quietly reg dmedval fire_2015 $drace i.time, vce(cluster gisjoin)
+
+***REG (3) - TABLE 23***
+eststo: quietly reg dmedval fire_2015 $drace $dtravel i.time, vce(cluster gisjoin)
+
+***REG (4) - TABLE 23***
+eststo: quietly reg dmedval fire_2015 $drace $dtravel $deduc i.time, vce(cluster gisjoin)
+
+***REG (5) - TABLE 23***
+eststo: quietly reg dmedval fire_2015 $drace $dtravel $deduc $dbuilt i.time, vce(cluster gisjoin)
+
+***REG (6) - TABLE 23***
+eststo: quietly reg dmedval fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm i.time, vce(cluster gisjoin)
+
+***REG (7) - TABLE 23***
+eststo: quietly reg dmedval fire_2015 $drace $dtravel $deduc $dbuilt $dbdrm $dmortag i.time, vce(cluster gisjoin)
+
+esttab, label modelwidth(20) addnotes("Model (1) to (7) use time fixed effects, and standard errors clustered at the census block group level." "Model (1) no controls." "Model (2) control for Percent Race." "Model (3) controls for Percent Race and Percent Travel Time to Work." "Model (4) controls for Percent Race, Percent Travel Time to Work, and Percent Educated" "Model (5) controls for Percent Race, Percent Travel Time to Work, Percent Educated, and Percent Year Built." "Model (6) controls for Percent Race, Percent Travel Time to Work, Percent Educated, Percent Year Built, and Percent Number of Bedrooms." "Model (7) controls for Percent Race, Percent Travel Time to Work, Percent Educated, Percent Year Built, Percent Number of Bedrooms, and Percent with Mortgage.") title("Sensitivity to Demographic and Neighbourhood Controls for Within 4km from a 2015 Wildfire Perimeter on Block Group Median Property Values") scalars(r2) keep(fire_2015)
+
+esttab using reg_table_23.tex, label modelwidth(20) addnotes("Model (1) to (7) use time fixed effects, and standard errors clustered at the census block group level." "Model (1) no controls." "Model (2) control for Percent Race." "Model (3) controls for Percent Race and Percent Travel Time to Work." "Model (4) controls for Percent Race, Percent Travel Time to Work, and Percent Educated" "Model (5) controls for Percent Race, Percent Travel Time to Work, Percent Educated, and Percent Year Built." "Model (6) controls for Percent Race, Percent Travel Time to Work, Percent Educated, Percent Year Built, and Percent Number of Bedrooms." "Model (7) controls for Percent Race, Percent Travel Time to Work, Percent Educated, Percent Year Built, Percent Number of Bedrooms, and Percent with Mortgage.") title("Sensitivity to Demographic and Neighbourhood Controls for Within 4km from a 2015 Wildfire Perimeter on Block Group Median Property Values") scalars(r2) keep(fire_2015) replace
+
+
 ***GRAPHS OF MAIN ANALYSIS: PLOTTING COEFFICIENT ON fire_2015 AGAINST DIFFERENT CUTOFF VALUES***
 ***SAVED OUTPUT IN EXCELL THEN USED PYTHON TO PLOT***
 
