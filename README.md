@@ -35,19 +35,21 @@ Description of Code and Notebook Files Used in the Completion of this undergradu
   * Sentivity Plots for 500meter distance cutoff values between 2km and 30km, 2km and 100km from Wildfire Perimeters. 
   * Also includes median block group property value trend graphs by 4km 2015 Ring (i.e. by main distance treatment). 
   
- * Test_Geo.ipynb
+* Test_Geo.ipynb
   * Main notebook for Great Circle Distance calculations from block groups to wildfire perimeters for all years between 2005 and 2018. 
   * Includes miscellaneous codes for original data description on February 1, 2021.
   * Note: This file is generally not as organized as the notebooks. 
   
- * Thesis_Poster_Sheldon_Birkett.pptx
+* Thesis_Poster_Sheldon_Birkett.pptx
   * Draft thesis poster: Last Updated on March 26, 2021. 
   
- * ECON499_DIFFNDIFF_REG.do
+* ECON499_DIFFNDIFF_REG.do
   * Attempt at Difference in Differences regression, did not use given data period constraints. 
   
- * ECON499_Census_Data_API.ipynb
+* ECON499_Census_Data_API.ipynb
   * Original code (outdated/didn't use) for getting ACS data through the Census API, but switched to IPUMS NHGIS to get ACS data since it was easier to extract data from. Census API had a bug which prevented me from extracting the relevant data. 
   
   
 Cleaned ACS/Wildfire Perimeter dataset not posted on Github, please contact for replication inquiries. 
+
+Author: Sheldon Birkett 
