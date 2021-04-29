@@ -27,6 +27,8 @@ Description of Code and Notebook Files Used in the Completion of this undergradu
   
 * ECON_499_Thesis_Sheldon_Birkett_Final_Draft.zip
   * Thesis .tex files for paper, figures, and tables.
+  * ECON_499_Thesis_Sheldon_Birkett_Final_For_Submission.zip
+    * Submitted Final Version .tex files for paper. 
   
 * Map_of_United_States_Wildfires.ipynb
   * Notebook for making map of wildfires in Western United States: Property Values by Census Block Groups. 
