@@ -52,6 +52,10 @@ Description of Code and Notebook Files Used in the Completion of this undergradu
   * Original code (outdated/didn't use) for getting ACS data through the Census API, but switched to IPUMS NHGIS to get ACS data since it was easier to extract data from. Census API had a bug which prevented me from extracting the relevant data. 
   
   
-Cleaned ACS/Wildfire Perimeter dataset not posted on Github, please contact [sheldonbirkett@gmail.com](mailto:sheldonbirkett@gmail.com) for replication inquiries. 
+Cleaned ACS/Wildfire Perimeter dataset not posted on Github, please contact [sheldonbirkett@gmail.com](mailto:sheldonbirkett@gmail.com) for replication inquiries.
+* Edit: ACS5_2005_2019_FULL_DATAFRAME_FOR_ANALYSIS_no_geo_WHP.csv is the full dataframe with Wildfire Hazard Potential (WHP) variables. Note that this is stored with Git LFS and if you don't have Git LFS installed you would only be able to fetch the pointer not the actual file. For info on using Git LFS see [Versioning Large Files](https://docs.github.com/en/github/managing-large-files/versioning-large-files). 
+ * Housing data and characteristics is from [IMPUS NHGIS](https://www.nhgis.org/)
+ * Wildfire Perimeter Data From the [National Interagency Wildfire Centre Open Data Website](https://data-nifc.opendata.arcgis.com/)
+ * Wildfire Hazard Potential Data for block groups is from [USA Wildfire Hazard Potential with Demographics](https://www.arcgis.com/home/item.html?id=ce92e9a37f27439082476c369e2f4254)
 
 Author: Sheldon Birkett 
