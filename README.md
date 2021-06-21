@@ -58,4 +58,7 @@ Cleaned ACS/Wildfire Perimeter dataset not posted on Github, please contact [she
  * Wildfire Perimeter Data From the [National Interagency Wildfire Centre Open Data Website](https://data-nifc.opendata.arcgis.com/)
  * Wildfire Hazard Potential Data for block groups is from [USA Wildfire Hazard Potential with Demographics](https://www.arcgis.com/home/item.html?id=ce92e9a37f27439082476c369e2f4254)
 
+Link to paper:
+ * [The Effect of Wildfire Proximity on Property Values: Evidence from the Western United States](https://theadhocglobalists.files.wordpress.com/2021/05/econ_499_thesis_sheldon_birkett_final_for_submission.pdf)
+
 Author: Sheldon Birkett 
